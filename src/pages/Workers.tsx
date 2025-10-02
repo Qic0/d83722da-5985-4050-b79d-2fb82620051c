@@ -253,13 +253,17 @@ const Workers = () => {
         const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000);
         const diffInMinutes = Math.floor(diffInSeconds / 60);
         
-        if (diffInSeconds < 60) return `${diffInSeconds} сек назад`;
-        if (diffInMinutes < 60) return `${diffInMinutes} мин назад`;
-        if (diffInMinutes < 1440) return `${Math.floor(diffInMinutes / 60)} ч назад`;
+        // Если разница отрицательная или меньше 5 секунд, показываем "только что"
+        if (diffInSeconds < 5) return 'только что';
+        
+        // Используем Math.max для предотвращения отрицательных значений
+        if (diffInSeconds < 60) return `${Math.max(0, diffInSeconds)} сек назад`;
+        if (diffInMinutes < 60) return `${Math.max(0, diffInMinutes)} мин назад`;
+        if (diffInMinutes < 1440) return `${Math.max(0, Math.floor(diffInMinutes / 60))} ч назад`;
         
         const diffInDays = Math.floor(diffInMinutes / 1440);
         if (diffInDays === 1) return 'Вчера';
-        if (diffInDays < 7) return `${diffInDays} дн назад`;
+        if (diffInDays < 7) return `${Math.max(0, diffInDays)} дн назад`;
         
         return date.toLocaleDateString('ru-RU', { 
           day: '2-digit', 
