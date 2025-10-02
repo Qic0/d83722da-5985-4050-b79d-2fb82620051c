@@ -3,9 +3,8 @@ import { Button } from "@/components/ui/button";
 import { Link, useLocation } from "react-router-dom";
 import UserHeader from "./UserHeader";
 import { useState, useEffect } from "react";
-import { formatInTimeZone, toZonedTime } from 'date-fns-tz';
-
-const MOSCOW_TZ = 'Europe/Moscow';
+import { format } from 'date-fns';
+import { ru } from 'date-fns/locale';
 
 const Header = () => {
   const location = useLocation();
@@ -74,10 +73,10 @@ const Header = () => {
           >
             <div className="text-center">
               <div className="text-4xl font-mono font-bold">
-                {formatInTimeZone(toZonedTime(currentTime, MOSCOW_TZ), MOSCOW_TZ, 'HH:mm:ss')}
+                {format(currentTime, 'HH:mm:ss')}
               </div>
               <div className="text-sm text-muted-foreground">
-                {formatInTimeZone(toZonedTime(currentTime, MOSCOW_TZ), MOSCOW_TZ, 'dd MMMM yyyy', { locale: undefined })} (МСК)
+                {format(currentTime, 'dd MMMM yyyy', { locale: ru })} (UTC)
               </div>
             </div>
           </motion.div>

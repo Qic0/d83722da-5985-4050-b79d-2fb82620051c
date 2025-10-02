@@ -2,7 +2,8 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Clock, AlertCircle, User, FileText } from "lucide-react";
 import { motion } from "framer-motion";
-import { formatInTimeZone, toZonedTime } from 'date-fns-tz';
+import { format } from 'date-fns';
+import { ru } from 'date-fns/locale';
 import { differenceInSeconds } from 'date-fns';
 
 interface WorkerTaskCardProps {
@@ -24,7 +25,7 @@ interface WorkerTaskCardProps {
   index?: number;
 }
 
-const MOSCOW_TZ = 'Europe/Moscow';
+// Working with UTC time directly
 
 const getPriorityColor = (priority: string | null) => {
   const colors = {
@@ -54,11 +55,10 @@ const formatCurrency = (amount: number) => {
 };
 
 const WorkerTaskCard = ({ task, currentTime, onClick, index = 0 }: WorkerTaskCardProps) => {
-  // Конвертируем обе даты в московское время
-  const dueDateMoscow = toZonedTime(new Date(task.due_date), MOSCOW_TZ);
-  const currentTimeMoscow = toZonedTime(currentTime, MOSCOW_TZ);
+  // Working with UTC time directly
+  const dueDate = new Date(task.due_date);
   
-  const diffSeconds = differenceInSeconds(dueDateMoscow, currentTimeMoscow);
+  const diffSeconds = differenceInSeconds(dueDate, currentTime);
   
   const isOverdue = diffSeconds <= 0;
   const isCritical = diffSeconds > 0 && diffSeconds < 3600; // меньше часа
@@ -209,7 +209,7 @@ const WorkerTaskCard = ({ task, currentTime, onClick, index = 0 }: WorkerTaskCar
 
               {/* Срок (дата) */}
               <div className="text-[10px] sm:text-xs text-muted-foreground text-center">
-                {formatInTimeZone(dueDateMoscow, MOSCOW_TZ, 'dd MMM yyyy, HH:mm', { locale: undefined })}
+                {format(dueDate, 'dd MMM yyyy, HH:mm', { locale: ru })}
               </div>
             </div>
           </div>

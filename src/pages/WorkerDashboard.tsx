@@ -7,7 +7,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { Database } from '@/integrations/supabase/types';
 import { useToast } from '@/hooks/use-toast';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { formatInTimeZone, toZonedTime } from 'date-fns-tz';
+// Working with UTC time directly
 import { useIsMobile } from '@/hooks/use-mobile';
 import {
   Drawer,
@@ -27,7 +27,7 @@ type Task = Database['public']['Tables']['zadachi']['Row'] & {
     client_name: string;
   };
 };
-const MOSCOW_TZ = 'Europe/Moscow';
+
 const WorkerDashboard = () => {
   const {
     user,
@@ -139,8 +139,8 @@ const WorkerDashboard = () => {
     currentTasksCount: currentTasks.length,
     completedTodayCount: completedTasks.filter(task => {
       if (!task.completed_at) return false;
-      const completedDate = toZonedTime(new Date(task.completed_at), MOSCOW_TZ);
-      const today = toZonedTime(new Date(), MOSCOW_TZ);
+      const completedDate = new Date(task.completed_at);
+      const today = new Date();
       return completedDate.toDateString() === today.toDateString();
     }).length
   };

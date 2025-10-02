@@ -2,7 +2,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { CheckCircle, Clock } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { formatInTimeZone, toZonedTime } from 'date-fns-tz';
+import { format } from 'date-fns';
 
 interface CompletedTask {
   uuid_zadachi: string;
@@ -16,7 +16,7 @@ interface CompletedTasksListProps {
   tasks: CompletedTask[];
 }
 
-const MOSCOW_TZ = 'Europe/Moscow';
+// Working with UTC time directly
 
 const formatCurrency = (amount: number) => {
   return new Intl.NumberFormat('ru-RU', {
@@ -28,7 +28,7 @@ const formatCurrency = (amount: number) => {
 const CompletedTasksList = ({ tasks }: CompletedTasksListProps) => {
   const today = new Date();
   const todayTasks = tasks.filter(task => {
-    const completedDate = toZonedTime(new Date(task.completed_at), MOSCOW_TZ);
+    const completedDate = new Date(task.completed_at);
     return completedDate.toDateString() === today.toDateString();
   });
 
@@ -70,11 +70,7 @@ const CompletedTasksList = ({ tasks }: CompletedTasksListProps) => {
                       </span>
                     )}
                     <span className="ml-auto">
-                      {formatInTimeZone(
-                        toZonedTime(new Date(task.completed_at), MOSCOW_TZ), 
-                        MOSCOW_TZ, 
-                        'HH:mm'
-                      )}
+                      {format(new Date(task.completed_at), 'HH:mm')}
                     </span>
                   </div>
                 </div>

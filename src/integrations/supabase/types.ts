@@ -341,10 +341,6 @@ export type Database = {
         Args: Record<PropertyKey, never>
         Returns: boolean
       }
-      moscow_now: {
-        Args: Record<PropertyKey, never>
-        Returns: string
-      }
       set_user_offline: {
         Args: { user_uuid: string }
         Returns: undefined
