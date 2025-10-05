@@ -305,120 +305,99 @@ export const WorkerDetailsDialog = ({ worker, open, onOpenChange }: WorkerDetail
         <div className="space-y-6">
           {/* Основная информация */}
           <Card className="overflow-hidden border-0 shadow-lg">
-            <div className="bg-gradient-to-br from-primary/10 via-primary/5 to-background p-8">
-              <div className="flex items-start gap-8">
+            <div className="bg-gradient-to-br from-primary/10 via-primary/5 to-background p-6">
+              <div className="flex items-start gap-6">
                 {/* Avatar Section */}
-                <div className="relative group">
-                  <div className="absolute -inset-1 bg-gradient-to-r from-primary to-primary/50 rounded-full opacity-75 group-hover:opacity-100 blur transition duration-300"></div>
-                  <Avatar className="relative h-32 w-32 ring-4 ring-background shadow-xl">
+                <div className="relative">
+                  <Avatar className="h-24 w-24 ring-2 ring-background shadow-lg">
                     <AvatarImage 
                       src={worker.avatar_url} 
                       alt={worker.full_name} 
                       className="object-cover"
                     />
-                    <AvatarFallback className="bg-gradient-to-br from-primary to-primary/80 text-primary-foreground font-display font-bold text-3xl">
+                    <AvatarFallback className="bg-gradient-to-br from-primary to-primary/80 text-primary-foreground font-bold text-2xl">
                       {worker.full_name?.split(' ').map((n: string) => n[0]).join('').slice(0, 2) || '?'}
                     </AvatarFallback>
                   </Avatar>
                   {/* Online Status Indicator */}
-                  <div className={`absolute bottom-2 right-2 w-6 h-6 rounded-full border-4 border-background shadow-lg ${
-                    isWorkerOnline() 
-                      ? 'bg-green-500 animate-pulse' 
-                      : 'bg-gray-400'
-                  }`}>
-                    <span className={`absolute inset-0 rounded-full ${
-                      isWorkerOnline() ? 'bg-green-500 animate-ping' : ''
-                    }`}></span>
-                  </div>
+                  <div className={`absolute bottom-1 right-1 w-5 h-5 rounded-full border-2 border-background ${
+                    isWorkerOnline() ? 'bg-green-500' : 'bg-gray-400'
+                  }`}></div>
                 </div>
 
                 {/* Info Section */}
-                <div className="flex-1 space-y-4">
+                <div className="flex-1 space-y-3">
                   <div>
-                    <h3 className="text-3xl font-bold bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent mb-3">
+                    <h3 className="text-2xl font-bold mb-2">
                       {worker.full_name}
                     </h3>
                     <div className="flex flex-wrap items-center gap-2">
-                      <Badge className={`${roleConfig.className} px-4 py-1.5 text-sm font-semibold`}>
-                        <User className="h-3.5 w-3.5 mr-1.5" />
+                      <Badge className={`${roleConfig.className} px-3 py-1 text-xs`}>
+                        <User className="h-3 w-3 mr-1" />
                         {roleConfig.label}
                       </Badge>
-                      <Badge className={`px-4 py-1.5 text-sm font-semibold ${
+                      <Badge className={`px-3 py-1 text-xs ${
                         getWorkerStatus() === 'online' 
                           ? 'bg-green-500/15 text-green-700 dark:text-green-300 border-green-300 dark:border-green-700'
                           : 'bg-gray-500/15 text-gray-700 dark:text-gray-300 border-gray-300 dark:border-gray-700'
                       }`}>
-                        <div className={`w-2 h-2 rounded-full mr-2 ${
-                          getWorkerStatus() === 'online' ? 'bg-green-500' : 'bg-gray-400'
-                        }`}></div>
                         {getWorkerStatus() === 'online' ? 'Онлайн' : 'Офлайн'}
                       </Badge>
                     </div>
                   </div>
 
+                  {/* Salary - Prominently Displayed */}
+                  {worker.salary && (
+                    <div className="py-3">
+                      <div className="flex items-baseline gap-2">
+                        <Coins className="h-6 w-6 text-primary" />
+                        <div>
+                          <p className="text-xs text-muted-foreground uppercase tracking-wide mb-1">Зарплата</p>
+                          <p className="text-4xl font-bold text-primary">
+                            {Number(worker.salary).toLocaleString('ru-RU')} ₽
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
                   <Separator className="bg-border/50" />
 
-                  <div className="grid md:grid-cols-2 gap-4">
-                    <div className="group flex items-center gap-3 p-3 rounded-lg bg-card/50 border border-border/50 hover:border-primary/30 hover:bg-card/80 transition-all duration-200">
-                      <div className="p-2 rounded-md bg-primary/10 group-hover:bg-primary/20 transition-colors">
-                        <Mail className="h-4 w-4 text-primary" />
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <p className="text-xs text-muted-foreground font-medium">Email</p>
-                        <p className="text-sm font-medium truncate">{worker.email}</p>
-                      </div>
+                  {/* Compact Contact Info */}
+                  <div className="grid grid-cols-2 gap-2 text-sm">
+                    <div className="flex items-center gap-2">
+                      <Mail className="h-3.5 w-3.5 text-muted-foreground" />
+                      <span className="truncate text-xs">{worker.email}</span>
                     </div>
                     
                     {worker.phone && (
-                      <div className="group flex items-center gap-3 p-3 rounded-lg bg-card/50 border border-border/50 hover:border-primary/30 hover:bg-card/80 transition-all duration-200">
-                        <div className="p-2 rounded-md bg-primary/10 group-hover:bg-primary/20 transition-colors">
-                          <Phone className="h-4 w-4 text-primary" />
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <p className="text-xs text-muted-foreground font-medium">Телефон</p>
-                          <p className="text-sm font-medium truncate">{worker.phone}</p>
-                        </div>
+                      <div className="flex items-center gap-2">
+                        <Phone className="h-3.5 w-3.5 text-muted-foreground" />
+                        <span className="text-xs">{worker.phone}</span>
                       </div>
                     )}
 
-                    {worker.salary && (
-                      <div className="group flex items-center gap-3 p-3 rounded-lg bg-card/50 border border-border/50 hover:border-primary/30 hover:bg-card/80 transition-all duration-200">
-                        <div className="p-2 rounded-md bg-primary/10 group-hover:bg-primary/20 transition-colors">
-                          <Coins className="h-4 w-4 text-primary" />
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <p className="text-xs text-muted-foreground font-medium">Зарплата</p>
-                          <p className="text-sm font-bold text-primary">{Number(worker.salary).toLocaleString('ru-RU')} ₽</p>
-                        </div>
-                      </div>
-                    )}
-
-                    <div className="group flex items-center gap-3 p-3 rounded-lg bg-card/50 border border-border/50 hover:border-primary/30 hover:bg-card/80 transition-all duration-200">
-                      <div className="p-2 rounded-md bg-primary/10 group-hover:bg-primary/20 transition-colors">
-                        <CalendarIcon className="h-4 w-4 text-primary" />
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <p className="text-xs text-muted-foreground font-medium">Последняя активность</p>
-                        <p className="text-sm font-medium">
-                          {worker.last_seen ? (() => {
-                            const match = worker.last_seen.match(/(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})/);
-                            if (!match) return worker.last_seen;
-                            const [, year, month, day, hour, minute] = match;
-                            const months = ['янв', 'фев', 'мар', 'апр', 'мая', 'июн', 'июл', 'авг', 'сен', 'окт', 'ноя', 'дек'];
-                            return `${day} ${months[parseInt(month) - 1]} ${year}, ${hour}:${minute}`;
-                          })() : 'Нет данных'}
-                        </p>
-                      </div>
+                    <div className="flex items-center gap-2 col-span-2">
+                      <CalendarIcon className="h-3.5 w-3.5 text-muted-foreground" />
+                      <span className="text-xs text-muted-foreground">
+                        {worker.last_seen ? (() => {
+                          const match = worker.last_seen.match(/(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})/);
+                          if (!match) return worker.last_seen;
+                          const [, year, month, day, hour, minute] = match;
+                          const months = ['янв', 'фев', 'мар', 'апр', 'мая', 'июн', 'июл', 'авг', 'сен', 'окт', 'ноя', 'дек'];
+                          return `${day} ${months[parseInt(month) - 1]} ${year}, ${hour}:${minute}`;
+                        })() : 'Нет данных'}
+                      </span>
                     </div>
                   </div>
 
                   {worker.current_task && (
-                    <div className="mt-4 p-4 rounded-lg bg-primary/5 border-l-4 border-primary">
-                      <div className="flex items-start gap-3">
-                        <Briefcase className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
+                    <div className="p-2.5 rounded-lg bg-primary/5 border-l-2 border-primary">
+                      <div className="flex items-start gap-2">
+                        <Briefcase className="h-4 w-4 text-primary mt-0.5 flex-shrink-0" />
                         <div className="flex-1 min-w-0">
-                          <p className="text-sm font-semibold text-primary mb-1">Текущая задача</p>
-                          <p className="text-sm text-muted-foreground">{worker.current_task}</p>
+                          <p className="text-xs font-semibold text-primary">Текущая задача</p>
+                          <p className="text-xs text-muted-foreground">{worker.current_task}</p>
                         </div>
                       </div>
                     </div>
