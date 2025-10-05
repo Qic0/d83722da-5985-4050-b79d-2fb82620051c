@@ -305,7 +305,7 @@ export const WorkerDetailsDialog = ({ worker, open, onOpenChange }: WorkerDetail
         <div className="space-y-6">
           {/* Основная информация */}
           <Card className="overflow-hidden border-0 shadow-lg">
-            <div className="p-6 animate-fade-in hover-scale">
+            <div className="p-6 animate-fade-in hover-scale animate-[pulse_3s_ease-in-out_infinite]">
               <div className="flex items-start gap-6">
                 {/* Avatar Section */}
                 <div className="relative">
