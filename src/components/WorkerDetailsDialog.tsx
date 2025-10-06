@@ -308,21 +308,40 @@ export const WorkerDetailsDialog = ({ worker, open, onOpenChange }: WorkerDetail
             <div className="p-6 animate-fade-in hover-scale">
               <div className="flex items-start gap-6">
                 {/* Avatar Section */}
-                <div className="relative">
-                  <Avatar className="h-24 w-24 ring-2 ring-background shadow-lg">
-                    <AvatarImage 
-                      src={worker.avatar_url} 
-                      alt={worker.full_name} 
-                      className="object-cover"
-                    />
-                    <AvatarFallback className="bg-gradient-to-br from-primary to-primary/80 text-primary-foreground font-bold text-2xl">
-                      {worker.full_name?.split(' ').map((n: string) => n[0]).join('').slice(0, 2) || '?'}
-                    </AvatarFallback>
-                  </Avatar>
-                  {/* Online Status Indicator */}
-                  <div className={`absolute bottom-1 right-1 w-5 h-5 rounded-full border-2 border-background ${
-                    isWorkerOnline() ? 'bg-green-500' : 'bg-gray-400'
-                  }`}></div>
+                <div className="flex flex-col items-center gap-3">
+                  <div className="relative">
+                    <Avatar className="h-32 w-32 ring-2 ring-background shadow-lg">
+                      <AvatarImage 
+                        src={worker.avatar_url} 
+                        alt={worker.full_name} 
+                        className="object-cover"
+                      />
+                      <AvatarFallback className="bg-gradient-to-br from-primary to-primary/80 text-primary-foreground font-bold text-3xl">
+                        {worker.full_name?.split(' ').map((n: string) => n[0]).join('').slice(0, 2) || '?'}
+                      </AvatarFallback>
+                    </Avatar>
+                    {/* Online Status Indicator */}
+                    <div className={`absolute bottom-1 right-1 w-6 h-6 rounded-full border-2 border-background ${
+                      isWorkerOnline() ? 'bg-green-500' : 'bg-gray-400'
+                    }`}></div>
+                  </div>
+                  
+                  {/* Last Activity Info */}
+                  <div className="flex flex-col items-center gap-1 text-center">
+                    <div className="flex items-center gap-2 text-muted-foreground">
+                      <CalendarIcon className="h-3.5 w-3.5" />
+                      <span className="text-xs font-medium">Последняя активность</span>
+                    </div>
+                    <span className="text-xs text-muted-foreground">
+                      {worker.last_seen ? (() => {
+                        const match = worker.last_seen.match(/(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})/);
+                        if (!match) return worker.last_seen;
+                        const [, year, month, day, hour, minute] = match;
+                        const months = ['янв', 'фев', 'мар', 'апр', 'мая', 'июн', 'июл', 'авг', 'сен', 'окт', 'ноя', 'дек'];
+                        return `${day} ${months[parseInt(month) - 1]} ${year}, ${hour}:${minute}`;
+                      })() : 'Нет данных'}
+                    </span>
+                  </div>
                 </div>
 
                 {/* Info Section */}
@@ -376,19 +395,6 @@ export const WorkerDetailsDialog = ({ worker, open, onOpenChange }: WorkerDetail
                         <span className="text-xs">{worker.phone}</span>
                       </div>
                     )}
-
-                    <div className="flex items-center gap-2 col-span-2">
-                      <CalendarIcon className="h-3.5 w-3.5 text-muted-foreground" />
-                      <span className="text-xs text-muted-foreground">
-                        {worker.last_seen ? (() => {
-                          const match = worker.last_seen.match(/(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})/);
-                          if (!match) return worker.last_seen;
-                          const [, year, month, day, hour, minute] = match;
-                          const months = ['янв', 'фев', 'мар', 'апр', 'мая', 'июн', 'июл', 'авг', 'сен', 'окт', 'ноя', 'дек'];
-                          return `${day} ${months[parseInt(month) - 1]} ${year}, ${hour}:${minute}`;
-                        })() : 'Нет данных'}
-                      </span>
-                    </div>
                   </div>
 
                   {worker.current_task && (
