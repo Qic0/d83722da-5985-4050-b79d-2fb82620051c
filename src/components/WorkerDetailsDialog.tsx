@@ -334,28 +334,11 @@ export const WorkerDetailsDialog = ({ worker, open, onOpenChange }: WorkerDetail
                     </div>
                     <span className="text-xs text-muted-foreground">
                       {worker.last_seen ? (() => {
-                        const date = new Date(worker.last_seen);
-                        if (isNaN(date.getTime())) return 'Нет данных';
-                        
-                        const now = new Date();
-                        const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000);
-                        const diffInMinutes = Math.floor(diffInSeconds / 60);
-                        
-                        if (diffInSeconds < 60) return `${diffInSeconds} сек назад`;
-                        if (diffInMinutes < 60) return `${diffInMinutes} мин назад`;
-                        if (diffInMinutes < 1440) return `${Math.floor(diffInMinutes / 60)} ч назад`;
-                        
-                        const diffInDays = Math.floor(diffInMinutes / 1440);
-                        if (diffInDays === 1) return 'Вчера';
-                        if (diffInDays < 7) return `${diffInDays} дн назад`;
-                        
-                        return date.toLocaleDateString('ru-RU', { 
-                          day: '2-digit', 
-                          month: '2-digit', 
-                          year: 'numeric',
-                          hour: '2-digit',
-                          minute: '2-digit'
-                        });
+                        const match = worker.last_seen.match(/(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})/);
+                        if (!match) return worker.last_seen;
+                        const [, year, month, day, hour, minute] = match;
+                        const months = ['янв', 'фев', 'мар', 'апр', 'мая', 'июн', 'июл', 'авг', 'сен', 'окт', 'ноя', 'дек'];
+                        return `${day} ${months[parseInt(month) - 1]} ${year}, ${hour}:${minute}`;
                       })() : 'Нет данных'}
                     </span>
                   </div>
