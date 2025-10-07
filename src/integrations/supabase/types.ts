@@ -357,7 +357,12 @@ export type Database = {
     Enums: {
       order_priority: "low" | "medium" | "high"
       task_priority: "low" | "medium" | "high" | "urgent"
-      task_status: "pending" | "in_progress" | "completed" | "cancelled"
+      task_status:
+        | "pending"
+        | "in_progress"
+        | "completed"
+        | "cancelled"
+        | "under_review"
       user_role:
         | "admin"
         | "manager"
@@ -500,7 +505,13 @@ export const Constants = {
     Enums: {
       order_priority: ["low", "medium", "high"],
       task_priority: ["low", "medium", "high", "urgent"],
-      task_status: ["pending", "in_progress", "completed", "cancelled"],
+      task_status: [
+        "pending",
+        "in_progress",
+        "completed",
+        "cancelled",
+        "under_review",
+      ],
       user_role: [
         "admin",
         "manager",
