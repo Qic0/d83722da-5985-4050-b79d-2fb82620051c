@@ -65,7 +65,7 @@ export const useAutoTaskCreation = () => {
           due_date: dueDate.toISOString(),
           salary: stageSettings.payment_amount,
           priority: 'medium',
-          status: 'pending'
+          status: 'in_progress'
         });
 
       if (error) {
