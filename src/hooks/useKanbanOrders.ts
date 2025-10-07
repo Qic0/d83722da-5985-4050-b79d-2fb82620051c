@@ -254,7 +254,7 @@ export const useKanbanOrders = () => {
                 due_date: dueDate.toISOString(),
                 salary: automationSettings.payment_amount || 0,
                 priority: 'medium',
-                status: 'pending'
+                status: 'in_progress'
               })
               .select()
               .single();
