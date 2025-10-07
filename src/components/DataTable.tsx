@@ -85,7 +85,7 @@ const getStatusBadge = (status: string) => {
       transition={{ duration: 0.2 }}
       whileHover={{ scale: 1.1 }}
     >
-      <Badge className={`${variants[status] || variants['pending']} transition-all duration-200`}>
+      <Badge className={`${variants[status] || variants['pending']} transition-all duration-200 whitespace-nowrap`}>
         {statusLabels[status] || status}
       </Badge>
     </motion.div>
