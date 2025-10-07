@@ -18,6 +18,7 @@ import {
 } from "@/components/ui/collapsible";
 import { format, parseISO, isSameDay } from "date-fns";
 import { ru } from "date-fns/locale";
+import { toZonedTime } from "date-fns-tz";
 import { 
   Mail, 
   Phone, 
@@ -334,7 +335,9 @@ export const WorkerDetailsDialog = ({ worker, open, onOpenChange }: WorkerDetail
                     </div>
                     <span className="text-xs text-muted-foreground">
                       {worker.last_seen ? (() => {
-                        const match = worker.last_seen.match(/(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})/);
+                        const utcDate = parseISO(worker.last_seen);
+                        const moscowDate = toZonedTime(utcDate, 'Europe/Moscow');
+                        const match = format(moscowDate, 'yyyy-MM-dd HH:mm').match(/(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2})/);
                         if (!match) return worker.last_seen;
                         const [, year, month, day, hour, minute] = match;
                         const months = ['янв', 'фев', 'мар', 'апр', 'мая', 'июн', 'июл', 'авг', 'сен', 'окт', 'ноя', 'дек'];
@@ -445,8 +448,9 @@ export const WorkerDetailsDialog = ({ worker, open, onOpenChange }: WorkerDetail
                 <span className="font-medium">Последняя активность:</span>
                 <span>
                   {worker.last_seen ? (() => {
-                    // Парсим ISO строку напрямую без timezone преобразования
-                    const match = worker.last_seen.match(/(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})/);
+                    const utcDate = parseISO(worker.last_seen);
+                    const moscowDate = toZonedTime(utcDate, 'Europe/Moscow');
+                    const match = format(moscowDate, 'yyyy-MM-dd HH:mm').match(/(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2})/);
                     if (!match) return worker.last_seen;
                     const [, year, month, day, hour, minute] = match;
                     const months = ['января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 
